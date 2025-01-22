@@ -58,10 +58,15 @@ class SiswaController extends Controller
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function import()
+    public function import(Request $request)
     {
-        Excel::import(new SiswaImport,request()->file('file'));
-
-        return back();
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048'
+        ]);
+    
+        Excel::import(new SiswaImport, $request->file('file'));
+    
+        return back()->with('success', 'Data berhasil diimpor!');
     }
+    
 }

@@ -1,1 +1,1 @@
-<img src="{{asset('logo_pi.png')}}" alt="" class="w-32 h-32">
+<img src="{{asset('pi_blue.png')}}" alt="" class="w-32 h-32">

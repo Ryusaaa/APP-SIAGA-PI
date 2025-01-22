@@ -49,7 +49,7 @@
         </ul>
         <p>Mohon untuk segera bertemu jika sedang luang, jika sedang tidak luang, mohon berikan konfirmasi lewat satpam.</p>
         <p>Terima kasih,</p>
-        <p><strong>REV SYSTEM</strong></p>
+        <p><strong>SIAGA SYSTEM</strong></p>
         <div class="footer">
             <p>Email ini dikirim secara otomatis. Harap tidak membalas email ini.</p>
         </div>

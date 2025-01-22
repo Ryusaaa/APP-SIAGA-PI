@@ -124,6 +124,7 @@
                     </div>
                 </div>
                     <div style="width: 50%; float: right;">
+                        <p>Nomor Telepon: {{ $tamu->no_telp }}</p>
                         <p>Tujuan: {{ $tamu->kemana }}</p>
                         <p>Keperluan: {{ $tamu->keperluan }}</p>
                         <p>Hari & Tanggal: {{ strftime('%A, %d/%m/%Y %H:%M', strtotime($tamu->created_at)) }}</p>

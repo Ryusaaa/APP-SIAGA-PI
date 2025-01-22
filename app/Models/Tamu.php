@@ -13,6 +13,8 @@ class Tamu extends Model
         'nama',
         'darimana',
         'kemana',
-        'keperluan',
+        'keperluan',    
+        'no_telp',
+        'captured_photo'
     ];
 }

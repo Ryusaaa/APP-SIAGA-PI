@@ -27,7 +27,7 @@
 
 
     <!-- Dashboard Icon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('logo_pi.png') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('pi_blue.png') }}" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -70,7 +70,7 @@
                     <div class="app-brand demo">
                         <a href="{{ url('dashboard') }}" class="app-brand-link">
 
-                            <img src="{{ asset('logo_pi.png') }}" alt="Logo" width="25%"
+                            <img src="{{ asset('pi_blue.png') }}" alt="Logo" width="25%"
                                 style="margin-left: -30px">
 
                             <span class="app-brand-text demo menu-text fw-bold ms-2"

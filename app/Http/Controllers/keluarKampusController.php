@@ -10,6 +10,8 @@ use App\Models\PerpindahanKelas;
 use App\Models\Kelas;
 use PDF;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class keluarKampusController extends Controller
 {
@@ -93,64 +95,78 @@ class keluarKampusController extends Controller
         return response()->json(['pdf_files' => $pdfFiles]);
     }
 
+
+
     public function storeSuratTamu(Request $request)
     {
         $validatedData = $request->validate([
-            'identitas' => 'nullable|string|max:255',
+            'identitas' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
-            'darimana' => 'nullable|string|max:255',
+            'darimana' => 'required|string|max:255',
             'kemana' => 'required|string|max:255',
             'keperluan' => 'required|string|max:255',
-            'captured_photo' => 'nullable|string'
+            'captured_photo' => 'required|string', // base64 tetap dikirim
+            'no_telp' => 'required|string|max:20'
         ]);
-    
-        // Simpan data tamu ke database
-        $tamu = Tamu::create($validatedData);
-    
-        // Proses foto yang di-capture
-        $photoData = null;
+
+        $imagePath = null;
+
         if ($request->has('captured_photo') && $request->captured_photo) {
-            // Dekode base64 image
             $imageData = $request->captured_photo;
-            
+
             // Pisahkan base64 header jika ada
             if (strpos($imageData, 'base64,') !== false) {
                 list($type, $imageData) = explode('base64,', $imageData);
             }
-            
-            // Decode base64 image
-            $photoData = base64_decode($imageData);
+
+            // Decode base64
+            $photoBinary = base64_decode($imageData);
+
+            // Generate unique filename
+            $imageName = 'photo_' . time() . '_' . Str::random(10) . '.jpg';
+            $imagePath = 'photos/' . $imageName;
+
+            // Simpan ke disk public
+            Storage::disk('public')->put($imagePath, $photoBinary);
+
+            // Masukkan path ke data validasi
+            $validatedData['captured_photo'] = $imagePath;
         }
-    
-        // Generate PDF dengan foto yang sudah di-decode
-        $pdf = PDF::loadView('pdf.surat_tamu', [
-            'tamu' => $tamu, 
-            'photoData' => $photoData ? 'data:image/jpeg;base64,'.base64_encode($photoData) : null
-        ]);
-    
-        $filename = 'surat_tamu_' . $tamu->id . '.pdf';
-    
-        // Simpan PDF ke folder public/pdf
-        $directory = public_path('pdf');
-        if (!is_dir($directory)) {
-            mkdir($directory, 0755, true);
+
+            // Simpan data tamu ke database
+            $tamu = Tamu::create($validatedData);
+
+            // Encode ulang untuk PDF (agar bisa disisipkan sebagai img src)
+            $photoData = $imagePath ? 'data:image/jpeg;base64,' . base64_encode(Storage::disk('public')->get($imagePath)) : null;
+
+            // Generate PDF
+            $pdf = PDF::loadView('pdf.surat_tamu', [
+                'tamu' => $tamu,
+                'photoData' => $photoData
+            ]);
+
+            $filename = 'surat_tamu_' . $tamu->id . '.pdf';
+
+            // Simpan PDF ke public/pdf
+            $directory = public_path('pdf');
+            if (!is_dir($directory)) {
+                mkdir($directory, 0755, true);
+            }
+            $pdf->save($directory . '/' . $filename);
+
+            // Kirim email
+            $toEmail = $this->getEmailByDestination($validatedData['kemana']);
+            if ($toEmail) {
+                Mail::send('emails.surat_tamu', $validatedData, function ($message) use ($toEmail, $filename) {
+                    $message->to($toEmail)
+                            ->subject('Surat Tamu Baru')
+                            ->attach(public_path('pdf/' . $filename));
+                });
+            }
+
+            return redirect()->route('showPdf', ['filename' => $filename])
+                            ->with('success', 'Data tamu berhasil disimpan dan email terkirim.');
         }
-        $pdf->save($directory . '/' . $filename);
-    
-        // Kirim email ke tujuan berdasarkan "kemana"
-        $toEmail = $this->getEmailByDestination($validatedData['kemana']);
-        if ($toEmail) {
-            Mail::send('emails.surat_tamu', $validatedData, function ($message) use ($toEmail, $filename) {
-                $message->to($toEmail)
-                        ->subject('Surat Tamu Baru')
-                        ->attach(public_path('pdf/' . $filename)); // Lampirkan PDF
-            });
-        }
-    
-        // Redirect ke halaman untuk melihat PDF
-        return redirect()->route('showPdf', ['filename' => $filename])
-                         ->with('success', 'Data tamu berhasil disimpan dan email terkirim.');
-    }
 
     private function getEmailByDestination($destination)
     {
