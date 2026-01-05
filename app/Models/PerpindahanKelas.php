@@ -11,6 +11,8 @@ class PerpindahanKelas extends Model
 
     protected $fillable = [
         'kelas_id',
+        'jurusan_id',
+        'mapel_id',
         'jumlah_siswa',
         'mapel',
     ];
@@ -18,6 +20,16 @@ class PerpindahanKelas extends Model
     public function kelas()
     {
         return $this->belongsTo(Kelas::class);
+    }
+
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class);
+    }
+
+    public function mataPelajaran()
+    {
+        return $this->belongsTo(Mapel::class, 'mapel_id');
     }
 }
 

@@ -1,66 +1,199 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SIAGA-PI - Sistem Informasi Izin & Administrasi Guru-Siswa SMK PI
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem terintegrasi untuk manajemen izin, perpindahan kelas, keterlambatan, dan buku tamu di SMK Prakarya Internasional berbasis Laravel 10.
 
-## About Laravel
+## Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+✅ **Sync Master Data** - Terintegrasi dengan data master Jurusan, Mapel, dan Kelas  
+✅ **Form Izin Keluar** - Mendukung multiple siswa dan sinkronisasi mapel  
+✅ **Form Perpindahan Kelas** - Pengelolaan perpindahan kelas dengan detail mapel  
+✅ **Form Keterlambatan** - Pencatatan keterlambatan siswa terintegrasi  
+✅ **Form Guestbook** - Registrasi tamu lengkap dengan fitur ambil foto  
+✅ **Export PDF** - Generate surat resmi dalam format PDF dengan layout standar sekolah  
+✅ **UI/UX Modern** - Antarmuka responsif dengan tema visual SMK PI  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Persyaratan Sistem
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP >= 8.1
+- Composer
+- Node.js & NPM
+- MySQL/MariaDB
+- PHP Extensions:
+  - pdo_mysql
+  - mbstring
+  - xml
+  - gd
+  - curl (opsional)
 
-## Learning Laravel
+## Instalasi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Clone & Install Dependencies
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+cd /home/ryusaaa/Documents/Coding-Tugas/PENDATAAN-SEKOLAH
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Install PHP dependencies
+composer install --ignore-platform-reqs
 
-## Laravel Sponsors
+# Install JavaScript dependencies
+npm install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### 2. Konfigurasi Environment
 
-### Premium Partners
+File `.env` sudah dibuat. Update konfigurasi database sesuai kebutuhan:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pendataan_sekolah
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Contributing
+### 3. Generate Application Key
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan key:generate
+php artisan storage:link
+```
 
-## Code of Conduct
+### 4. Setup Database
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Buat database baru:
 
-## Security Vulnerabilities
+```bash
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS pendataan_sekolah;"
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Jalankan migrasi:
 
-## License
+```bash
+php artisan migrate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 5. Build Assets
+
+```bash
+npm run build
+# atau untuk development
+npm run dev
+```
+
+### 6. Jalankan Aplikasi
+
+```bash
+php artisan serve
+```
+
+Akses aplikasi di: `http://localhost:8000`
+
+## Struktur Project
+
+```
+├── app/
+│   ├── Http/Controllers/
+│   │   └── keluarKampusController.php  # Main controller
+│   └── Models/                         # Siswa, Izin, Kelas, dll
+├── resources/
+│   ├── views/
+│   │   ├── home.blade.php             # Homepage dengan form
+│   │   └── pdf/                        # PDF templates
+│   ├── css/                            # Styles
+│   └── js/                             # JavaScript
+├── public/
+│   └── pdf/                            # Generated PDF files
+└── routes/
+    └── web.php                         # Route definitions
+```
+
+## Cara Penggunaan
+
+### Form Izin Keluar
+
+1. Pilih tab "Izin Keluar"
+2. Pilih nama siswa (bisa multiple)
+3. Isi alasan keluar
+4. Isi mata pelajaran
+5. Klik "Submit & Export PDF"
+6. PDF akan terbuka di tab baru
+
+### Form Perpindahan Kelas
+
+1. Pilih tab "Pindah Kelas"
+2. Pilih kelas tujuan
+3. Isi jumlah siswa
+4. Isi mata pelajaran
+5. Klik "Submit & Export PDF"
+
+### Form Surat Tamu
+
+1. Pilih tab "Surat Tamu"
+2. Isi data tamu (nama, identitas, telepon, dll)
+3. Klik "Buka Kamera" untuk ambil foto
+4. Klik "Ambil Foto"
+5. Klik "Submit & Export PDF"
+
+## Troubleshooting
+
+### Error: PDO extension not found
+
+Install PHP PDO extension:
+
+```bash
+# Alpine Linux
+apk add php83-pdo php83-pdo_mysql
+
+# Ubuntu/Debian
+sudo apt-get install php8.1-mysql
+
+# CentOS/RHEL
+sudo yum install php-pdo php-mysqlnd
+```
+
+### Error: composer dependencies
+
+Gunakan flag `--ignore-platform-reqs`:
+
+```bash
+composer install --ignore-platform-reqs
+```
+
+### PDF tidak ter-generate
+
+Pastikan folder `public/pdf` writable:
+
+```bash
+chmod -R 775 public/pdf
+```
+
+## Konfigurasi Email (Opsional)
+
+Untuk fitur email pada surat tamu, update `.env`:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME="your-email@gmail.com"
+MAIL_PASSWORD="your-app-password"
+MAIL_ENCRYPTION=tls
+```
+
+## Teknologi
+
+- **Backend**: Laravel 10
+- **Frontend**: HTML, CSS, JavaScript
+- **UI**: Custom CSS dengan gradient & animations
+- **PDF**: DomPDF (barryvdh/laravel-dompdf)
+- **Database**: MySQL
+- **Components**: Select2 untuk dropdown
+
+## Lisensi
+
+MIT License
+
+---
+
+Dibuat untuk SMK Prakarya Internasional 🎓

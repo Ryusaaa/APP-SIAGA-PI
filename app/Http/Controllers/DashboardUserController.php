@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jurusan;
+use App\Models\Mapel;
 use App\Models\Izin;
 use App\Models\Kelas;
 use App\Models\PerpindahanKelas;
-use App\Models\siswa;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 
 class DashboardUserController extends Controller
@@ -15,8 +17,10 @@ class DashboardUserController extends Controller
         $izins = Izin::latest()->with('siswa')->get();
         $perpindahanKelas = PerpindahanKelas::all();
         $kelas = Kelas::all();
-        $siswas = siswa::all();
+        $siswas = Siswa::all();
+        $jurusans = Jurusan::where('is_active', true)->get();
+        $mapels = Mapel::where('is_active', true)->get();
 
-        return view('dashboardUser', compact('izins', 'siswas', 'perpindahanKelas', 'kelas'));
+        return view('home', compact('izins', 'siswas', 'perpindahanKelas', 'kelas', 'jurusans', 'mapels'));
     }
 }

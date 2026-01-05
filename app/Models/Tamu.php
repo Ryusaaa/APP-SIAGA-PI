@@ -11,10 +11,16 @@ class Tamu extends Model
     protected $fillable = [
         'identitas',
         'nama',
+        'jurusan_id',
         'darimana',
         'kemana',
         'keperluan',    
         'no_telp',
         'captured_photo'
     ];
+
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class);
+    }
 }

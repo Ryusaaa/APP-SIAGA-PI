@@ -8,7 +8,7 @@ use App\Models\Siswa;
 use App\Models\Tamu;
 use App\Models\PerpindahanKelas;
 use App\Models\Kelas;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -29,15 +29,17 @@ class keluarKampusController extends Controller
     {
         $validatedData = $request->validate([
             'kelas_id' => 'required|exists:kelas,id',
+            'jurusan_id' => 'required|exists:jurusans,id',
+            'mapel_id' => 'required|exists:mapels,id',
             'jumlah_siswa' => 'required|integer|min:1',
-            'mapel' => 'required|string|max:255',
+            'mapel' => 'nullable|string|max:255',
         ]);
 
         // Create PerpindahanKelas record
         $perpindahanKelas = PerpindahanKelas::create($validatedData);
 
         // Generate PDF content
-        $pdf = PDF::loadView('pdf.perpindahan_kelas', compact('perpindahanKelas'));
+        $pdf = Pdf::loadView('pdf.perpindahan_kelas', compact('perpindahanKelas'));
         $filename = 'perpindahan_kelas_' . $perpindahanKelas->id . '.pdf';
 
         // Ensure the directory exists
@@ -49,8 +51,12 @@ class keluarKampusController extends Controller
         // Save the PDF file
         $pdf->save($directory . '/' . $filename);
 
-        // Redirect to a route that shows the PDF
-        return redirect()->route('showPdf', ['filename' => $filename]);
+        // Return JSON with PDF URL
+        return response()->json([
+            'success' => true,
+            'url' => route('showPdf', ['filename' => $filename]),
+            'message' => 'Surat perpindahan kelas berhasil dibuat'
+        ]);
     }
 
     public function storeIzinkeluar(Request $request)
@@ -58,41 +64,57 @@ class keluarKampusController extends Controller
         $validatedData = $request->validate([
             'siswa_id' => 'required|array',
             'siswa_id.*' => 'required|exists:siswas,id',
+            'kelas_id' => 'required|exists:kelas,id',
+            'jurusan_id' => 'required|exists:jurusans,id',
+            'mapel_id' => 'required|exists:mapels,id',
             'alasan' => 'required|max:255',
-            'mapel' => 'required|string|max:255',
         ]);
 
-        // Loop through each siswa_id and create a PDF for each
         $pdfFiles = [];
+
         foreach ($validatedData['siswa_id'] as $siswaId) {
+            $mapel = \App\Models\Mapel::find($validatedData['mapel_id']);
+
             $izinData = [
                 'siswa_id' => $siswaId,
+                'kelas_id' => $validatedData['kelas_id'],
+                'jurusan_id' => $validatedData['jurusan_id'],
+                'mapel_id' => $validatedData['mapel_id'],
                 'alasan' => $validatedData['alasan'],
-                'mapel' => $validatedData['mapel'],
             ];
 
             // Create Izin record
             $izin = Izin::create($izinData);
 
-            // Generate PDF content
+            // Create Tracking record
+            \App\Models\SiswaTracking::create([
+                'siswa_id' => $siswaId,
+                'izin_id' => $izin->id,
+                'waktu_keluar' => now(),
+            ]);
+
+            // Load relationships for PDF
+            $izin->load('siswa');
+            $izin->mapel = $mapel->nama;
+
+            // Generate PDF
             $pdf = PDF::loadView('pdf.surat_izin', compact('izin'));
             $filename = 'suratizin-' . $izin->id . '.pdf';
 
-            // Ensure the directory exists
             $directory = public_path('pdf');
             if (!is_dir($directory)) {
                 mkdir($directory, 0755, true);
             }
 
-            // Save the PDF file
             $pdf->save($directory . '/' . $filename);
-
-            // Add URL of the PDF file to the array
             $pdfFiles[] = url('pdf/' . $filename);
         }
 
-        // Return array of PDF file URLs
-        return response()->json(['pdf_files' => $pdfFiles]);
+        return response()->json([
+            'success' => true,
+            'pdf_files' => $pdfFiles,
+            'message' => 'Surat izin berhasil dibuat'
+        ]);
     }
 
 
@@ -102,6 +124,7 @@ class keluarKampusController extends Controller
         $validatedData = $request->validate([
             'identitas' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
+            'jurusan_id' => 'nullable|exists:jurusans,id',
             'darimana' => 'required|string|max:255',
             'kemana' => 'required|string|max:255',
             'keperluan' => 'required|string|max:255',
@@ -133,40 +156,43 @@ class keluarKampusController extends Controller
             $validatedData['captured_photo'] = $imagePath;
         }
 
-            // Simpan data tamu ke database
-            $tamu = Tamu::create($validatedData);
+        // Simpan data tamu ke database
+        $tamu = Tamu::create($validatedData);
 
-            // Encode ulang untuk PDF (agar bisa disisipkan sebagai img src)
-            $photoData = $imagePath ? 'data:image/jpeg;base64,' . base64_encode(Storage::disk('public')->get($imagePath)) : null;
+        // Encode ulang untuk PDF (agar bisa disisipkan sebagai img src)
+        $photoData = $imagePath ? 'data:image/jpeg;base64,' . base64_encode(Storage::disk('public')->get($imagePath)) : null;
 
-            // Generate PDF
-            $pdf = PDF::loadView('pdf.surat_tamu', [
-                'tamu' => $tamu,
-                'photoData' => $photoData
-            ]);
+        // Generate PDF
+        $pdf = PDF::loadView('pdf.surat_tamu', [
+            'tamu' => $tamu,
+            'photoData' => $photoData
+        ]);
 
-            $filename = 'surat_tamu_' . $tamu->id . '.pdf';
+        $filename = 'surat_tamu_' . $tamu->id . '.pdf';
 
-            // Simpan PDF ke public/pdf
-            $directory = public_path('pdf');
-            if (!is_dir($directory)) {
-                mkdir($directory, 0755, true);
-            }
-            $pdf->save($directory . '/' . $filename);
-
-            // Kirim email
-            $toEmail = $this->getEmailByDestination($validatedData['kemana']);
-            if ($toEmail) {
-                Mail::send('emails.surat_tamu', $validatedData, function ($message) use ($toEmail, $filename) {
-                    $message->to($toEmail)
-                            ->subject('Surat Tamu Baru')
-                            ->attach(public_path('pdf/' . $filename));
-                });
-            }
-
-            return redirect()->route('showPdf', ['filename' => $filename])
-                            ->with('success', 'Data tamu berhasil disimpan dan email terkirim.');
+        // Simpan PDF ke public/pdf
+        $directory = public_path('pdf');
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
         }
+        $pdf->save($directory . '/' . $filename);
+
+        // Kirim email
+        $toEmail = $this->getEmailByDestination($validatedData['kemana']);
+        if ($toEmail) {
+            Mail::send('emails.surat_tamu', $validatedData, function ($message) use ($toEmail, $filename) {
+                $message->to($toEmail)
+                    ->subject('Surat Tamu Baru')
+                    ->attach(public_path('pdf/' . $filename));
+            });
+        }
+
+        return response()->json([
+            'success' => true,
+            'url' => route('showPdf', ['filename' => $filename]),
+            'message' => 'Surat tamu berhasil dibuat dan email terkirim'
+        ]);
+    }
 
     private function getEmailByDestination($destination)
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Imports\SiswaImport;
+use App\Exports\SiswaTemplateExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Siswa;
 use App\Models\Kelas;
@@ -63,10 +64,18 @@ class SiswaController extends Controller
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv|max:2048'
         ]);
-    
-        Excel::import(new SiswaImport, $request->file('file'));
-    
-        return back()->with('success', 'Data berhasil diimpor!');
+
+        try {
+            Excel::import(new SiswaImport, $request->file('file'));
+            return back()->with('success', 'Data berhasil diimpor!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
+        }
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new SiswaTemplateExport, 'template_siswa.xlsx');
     }
     
 }

@@ -17,8 +17,10 @@
     },
     "dependencies": {
         "chart.js": "^4.4.3",
+        "datatables.net-bs5": "^2.3.6",
         "datatables.net-dt": "^2.0.7",
         "flowbite": "^2.3.0",
-        "preline": "^2.1.0"
+        "preline": "^2.1.0",
+        "sweetalert2": "^11.26.17"
     }
 }

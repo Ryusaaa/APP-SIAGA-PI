@@ -20,8 +20,9 @@ class SuratTelatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'siswa_id' => 'required',
-            'jamMasuk' => 'nullable',
+            'siswa_id' => 'required|exists:siswas,id',
+            'kelas_id' => 'required|exists:kelas,id',
+            'jurusan_id' => 'required|exists:jurusans,id',
             'alasan' => 'nullable',
         ]);
 
@@ -29,10 +30,10 @@ class SuratTelatController extends Controller
 
         $siswa = SuratTerlambat::create([
             'siswa_id' => $request->siswa_id,
+            'kelas_id' => $request->kelas_id,
+            'jurusan_id' => $request->jurusan_id,
             'jamMasuk' => $now,
             'alasan' => $request->alasan,
-
-
         ]);
 
         $pdf = PDF::loadView('pdf.surat_terlambat', compact('siswa'));
@@ -47,9 +48,14 @@ class SuratTelatController extends Controller
         // Save the PDF file
         $pdf->save($directory . '/' . $filename);
 
-        $pdfFiles[] = url('pdf/' . $filename); // Tambahkan URL file PDF ke array
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'url' => route('showPdf', ['filename' => $filename]),
+                'message' => 'Surat keterangan terlambat berhasil dibuat'
+            ]);
+        }
 
-        // return array of PDF file URL s
         return redirect()->route('showPdf', ['filename' => $filename]);
     }
 
