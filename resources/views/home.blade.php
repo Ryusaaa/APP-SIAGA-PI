@@ -511,18 +511,9 @@
                         <label for="kemana">Tujuan</label>
                         <select name="kemana" id="kemana" class="form-control" required>
                             <option value="">Pilih Tujuan</option>
-                            <option value="Kepala Sekolah">Kepala Sekolah</option>
-                            <option value="Hubin">Hubin</option>
-                            <option value="Tata Usaha">Tata Usaha</option>
-                            <option value="Keuangan">Keuangan</option>
-                            <option value="Kaprog PPLG">Kaprog PPLG</option>
-                            <option value="Kaprog MPLB">Kaprog MPLB</option>
-                            <option value="Kaprog DKV">Kaprog DKV</option>
-                            <option value="Kaprog TJKT">Kaprog TJKT</option>
-                            <option value="Kaprog HR">Kaprog HR</option>
-                            <option value="Kaprog TMP">Kaprog TMP</option>
-                            <option value="Kaprog TKR">Kaprog TKR</option>
-                            <option value="Kaprog TSM">Kaprog TSM</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->name }}">{{ $user->name }}</option>
+                            @endforeach
                         </select>
                     </div>
 

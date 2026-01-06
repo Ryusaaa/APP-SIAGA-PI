@@ -12,6 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class keluarKampusController extends Controller
 {
@@ -21,8 +22,9 @@ class keluarKampusController extends Controller
         $perpindahanKelas = PerpindahanKelas::all();
         $kelas = Kelas::all();
         $siswas = Siswa::all();
+        $users = User::all();
 
-        return view('home', compact('izins', 'siswas', 'perpindahanKelas', 'kelas'));
+        return view('home', compact('izins', 'siswas', 'perpindahanKelas', 'kelas', 'users'));
     }
 
     public function storePindahkelas(Request $request)
@@ -196,23 +198,9 @@ class keluarKampusController extends Controller
 
     private function getEmailByDestination($destination)
     {
-        $emailMap = [
-            'Kepala Sekolah' => 'mochammadsyamihardiana@gmail.com',
-            'Hubin' => 'hubin@sekolah.com',
-            'Tata Usaha' => 'tu@sekolah.com',
-            'Keuangan' => 'keuangan@sekolah.com',
-            'Kaprog PPLG' => '',
-            'Kaprog MPLB' => '',
-            'Kaprog DKV' => '',
-            'Kaprog TJKT' => '',
-            'Kaprog HR' => '',
-            'Kaprog TMP' => '',
-            'Kaprog TKR' => '',
-            'Kaprog TSM' => ''
-            // Tambahkan email lainnya sesuai kebutuhan
-        ];
+        $user = User::where('name', $destination)->first(); 
 
-        return $emailMap[$destination] ?? null;
+        return $user ? $user->email : null;
     }
 
     public function showPdf($filename)
