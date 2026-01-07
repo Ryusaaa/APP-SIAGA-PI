@@ -35,6 +35,8 @@ class keluarKampusController extends Controller
             'mapel_id' => 'required|exists:mapels,id',
             'jumlah_siswa' => 'required|integer|min:1',
             'mapel' => 'nullable|string|max:255',
+            'guru_kampus_asal' => 'nullable|string|max:255',
+            'guru_kampus_tujuan' => 'nullable|string|max:255',
         ]);
 
         // Create PerpindahanKelas record
@@ -70,6 +72,7 @@ class keluarKampusController extends Controller
             'jurusan_id' => 'required|exists:jurusans,id',
             'mapel_id' => 'required|exists:mapels,id',
             'alasan' => 'required|max:255',
+            'nama_guru' => 'nullable|string|max:255',
         ]);
 
         $pdfFiles = [];
@@ -83,6 +86,7 @@ class keluarKampusController extends Controller
                 'jurusan_id' => $validatedData['jurusan_id'],
                 'mapel_id' => $validatedData['mapel_id'],
                 'alasan' => $validatedData['alasan'],
+                'nama_guru' => $validatedData['nama_guru'] ?? null,
             ];
 
             // Create Izin record

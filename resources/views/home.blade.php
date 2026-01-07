@@ -407,6 +407,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="nama_guru">Nama Guru (Opsional)</label>
+                        <input type="text" name="nama_guru" class="form-control" id="nama_guru" 
+                            placeholder="Masukkan nama guru mata pelajaran">
+                    </div>
+
+                    <div class="form-group">
                         <label for="alasan">Alasan Keluar</label>
                         <textarea name="alasan" class="form-control" id="alasan" required
                             placeholder="Contoh: Sakit, keperluan keluarga, dll"></textarea>
@@ -453,6 +459,18 @@
                         <label for="jumlah_siswa">Jumlah Siswa</label>
                         <input type="number" name="jumlah_siswa" class="form-control" id="jumlah_siswa" required min="1"
                             placeholder="Masukkan jumlah siswa">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guru_kampus_asal">Guru Kampus Asal (Dari Sini)</label>
+                        <input type="text" name="guru_kampus_asal" class="form-control" id="guru_kampus_asal" 
+                            placeholder="Nama guru di kampus asal">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guru_kampus_tujuan">Guru Kampus Tujuan (Ke Sana)</label>
+                        <input type="text" name="guru_kampus_tujuan" class="form-control" id="guru_kampus_tujuan" 
+                            placeholder="Nama guru di kampus tujuan">
                     </div>
 
                     <div class="form-group">

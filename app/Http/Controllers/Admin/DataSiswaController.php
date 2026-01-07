@@ -58,55 +58,71 @@ class DataSiswaController extends Controller
     {
         $terlambats = SuratTerlambat::whereDate('created_at', Carbon::today())->orderBy('created_at', 'desc')->get();
         $interval = 'day';
+        $jurusans = \App\Models\Jurusan::where('is_active', true)->get();
 
-        return view('admin.terlambat', compact('terlambats', 'interval'));
+        return view('admin.terlambat', compact('terlambats', 'interval', 'jurusans'));
     }
 
     public function filterLate(Request $request)
     {
         $interval = $request->input('interval');
         $export = $request->input('export');
+        $jurusanId = $request->input('jurusan_id');
+
+        $query = SuratTerlambat::query()->with(['siswa', 'kelas', 'jurusan']);
+
+        // Apply jurusan filter first
+        if ($jurusanId) {
+            $query->where('jurusan_id', $jurusanId);
+        }
 
         switch ($interval) {
             case 'day':
-                $terlambats = SuratTerlambat::whereDate('created_at', Carbon::today())->orderBy('created_at', 'desc')->get();
+                $startDate = Carbon::today();
+                $endDate = Carbon::today()->endOfDay();
                 break;
             case 'week':
-                $startOfWeek = Carbon::now()->startOfWeek();
-                $endOfWeek = Carbon::now()->endOfWeek();
-                $terlambats = SuratTerlambat::whereBetween('created_at', [$startOfWeek, $endOfWeek])->orderBy('created_at', 'desc')->get();
+                $startDate = Carbon::now()->startOfWeek();
+                $endDate = Carbon::now()->endOfWeek();
                 break;
             case 'month':
-                $startOfMonth = Carbon::now()->startOfMonth();
-                $endOfMonth = Carbon::now()->endOfMonth();
-                $terlambats = SuratTerlambat::whereBetween('created_at', [$startOfMonth, $endOfMonth])->orderBy('created_at', 'desc')->get();
+                $startDate = Carbon::now()->startOfMonth();
+                $endDate = Carbon::now()->endOfMonth();
                 break;
             case 'yesterday':
-                $terlambats = SuratTerlambat::whereDate('created_at', Carbon::yesterday())->orderBy('created_at', 'desc')->get();
+                $startDate = Carbon::yesterday();
+                $endDate = Carbon::yesterday()->endOfDay();
                 break;
             case 'lastWeek':
-                $startOfLastWeek = Carbon::now()->subWeek()->startOfWeek();
-                $endOfLastWeek = Carbon::now()->subWeek()->endOfWeek();
-                $terlambats = SuratTerlambat::whereBetween('created_at', [$startOfLastWeek, $endOfLastWeek])->orderBy('created_at', 'desc')->get();
+                $startDate = Carbon::now()->subWeek()->startOfWeek();
+                $endDate = Carbon::now()->subWeek()->endOfWeek();
                 break;
             case 'lastMonth':
-                $startOfLastMonth = Carbon::now()->subMonth()->startOfMonth();
-                $endOfLastMonth = Carbon::now()->subMonth()->endOfMonth();
-                $terlambats = SuratTerlambat::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->orderBy('created_at', 'desc')->get();
+                $startDate = Carbon::now()->subMonth()->startOfMonth();
+                $endDate = Carbon::now()->subMonth()->endOfMonth();
                 break;
             case 'all':
-                $terlambats = SuratTerlambat::latest()->get();
+                $startDate = null;
+                $endDate = null;
                 break;
             default:
-                $terlambats = collect();
+                $startDate = Carbon::today();
+                $endDate = Carbon::today()->endOfDay();
                 break;
         }
 
-        if ($export && $export === 'excel') {
-            return Excel::download(new LatesExport($terlambats), 'terlambat.xls');
+        if ($startDate && $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
         }
 
-        return view('admin.terlambat', compact('terlambats', 'interval'));
+        $terlambats = $query->orderBy('created_at', 'desc')->get();
+
+        if ($export && $export === 'excel') {
+            return Excel::download(new \App\Exports\TerlambatExport($jurusanId, $interval, $startDate, $endDate), 'data_terlambat.xlsx');
+        }
+
+        $jurusans = \App\Models\Jurusan::where('is_active', true)->get();
+        return view('admin.terlambat', compact('terlambats', 'interval', 'jurusans'));
     }
 
     public function lateDelete($id)

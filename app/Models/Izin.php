@@ -15,6 +15,7 @@ class Izin extends Model
         'mapel_id',
         'alasan',
         'mapel',
+        'nama_guru',
     ];
 
     public function siswa()

@@ -15,6 +15,8 @@ class PerpindahanKelas extends Model
         'mapel_id',
         'jumlah_siswa',
         'mapel',
+        'guru_kampus_asal',
+        'guru_kampus_tujuan',
     ];
 
     public function kelas()
