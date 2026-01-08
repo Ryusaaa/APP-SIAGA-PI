@@ -407,6 +407,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="nama_guru">Nama Guru (Opsional)</label>
+                        <input type="text" name="nama_guru" class="form-control" id="nama_guru" 
+                            placeholder="Masukkan nama guru mata pelajaran">
+                    </div>
+
+                    <div class="form-group">
                         <label for="alasan">Alasan Keluar</label>
                         <textarea name="alasan" class="form-control" id="alasan" required
                             placeholder="Contoh: Sakit, keperluan keluarga, dll"></textarea>
@@ -456,6 +462,18 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="guru_kampus_asal">Guru Kampus Asal (Dari Sini)</label>
+                        <input type="text" name="guru_kampus_asal" class="form-control" id="guru_kampus_asal" 
+                            placeholder="Nama guru di kampus asal">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guru_kampus_tujuan">Guru Kampus Tujuan (Ke Sana)</label>
+                        <input type="text" name="guru_kampus_tujuan" class="form-control" id="guru_kampus_tujuan" 
+                            placeholder="Nama guru di kampus tujuan">
+                    </div>
+
+                    <div class="form-group">
                         <label for="mapel_pindah">Keterangan Tambahan (Opsi)</label>
                         <input type="text" name="mapel" class="form-control" id="mapel_pindah" 
                             placeholder="Contoh: Praktikum PPLG">
@@ -474,16 +492,16 @@
                 <form id="formSuratTamu">
                     @csrf
                     <div class="form-group">
-                        <label for="nama">Nama Tamu</label>
+                        <label for="nama">Nama</label>
                         <input type="text" name="nama" class="form-control" id="nama" required
-                            placeholder="Nama lengkap tamu">
+                            placeholder="Nama lengkap">
                     </div>
-
+<!-- 
                     <div class="form-group">
                         <label for="identitas">No. Identitas (KTP/SIM)</label>
                         <input type="text" name="identitas" class="form-control" id="identitas" required
                             placeholder="Nomor identitas">
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                         <label for="jurusan_id_tamu">Jurusan Tujuan (Opsi)</label>
@@ -502,8 +520,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="darimana">Dari Mana</label>
-                        <input type="text" name="darimana" class="form-control" id="darimana" required
+                        <label for="instansi">instansi</label>
+                        <input type="text" name="instansi" class="form-control" id="instansi" required
                             placeholder="Asal instansi/tempat">
                     </div>
 
@@ -511,18 +529,9 @@
                         <label for="kemana">Tujuan</label>
                         <select name="kemana" id="kemana" class="form-control" required>
                             <option value="">Pilih Tujuan</option>
-                            <option value="Kepala Sekolah">Kepala Sekolah</option>
-                            <option value="Hubin">Hubin</option>
-                            <option value="Tata Usaha">Tata Usaha</option>
-                            <option value="Keuangan">Keuangan</option>
-                            <option value="Kaprog PPLG">Kaprog PPLG</option>
-                            <option value="Kaprog MPLB">Kaprog MPLB</option>
-                            <option value="Kaprog DKV">Kaprog DKV</option>
-                            <option value="Kaprog TJKT">Kaprog TJKT</option>
-                            <option value="Kaprog HR">Kaprog HR</option>
-                            <option value="Kaprog TMP">Kaprog TMP</option>
-                            <option value="Kaprog TKR">Kaprog TKR</option>
-                            <option value="Kaprog TSM">Kaprog TSM</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->name }}">{{ $user->name }}</option>
+                            @endforeach
                         </select>
                     </div>
 

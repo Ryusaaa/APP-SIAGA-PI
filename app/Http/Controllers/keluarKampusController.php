@@ -12,6 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class keluarKampusController extends Controller
 {
@@ -21,8 +22,9 @@ class keluarKampusController extends Controller
         $perpindahanKelas = PerpindahanKelas::all();
         $kelas = Kelas::all();
         $siswas = Siswa::all();
+        $users = User::all();
 
-        return view('home', compact('izins', 'siswas', 'perpindahanKelas', 'kelas'));
+        return view('home', compact('izins', 'siswas', 'perpindahanKelas', 'kelas', 'users'));
     }
 
     public function storePindahkelas(Request $request)
@@ -33,6 +35,8 @@ class keluarKampusController extends Controller
             'mapel_id' => 'required|exists:mapels,id',
             'jumlah_siswa' => 'required|integer|min:1',
             'mapel' => 'nullable|string|max:255',
+            'guru_kampus_asal' => 'nullable|string|max:255',
+            'guru_kampus_tujuan' => 'nullable|string|max:255',
         ]);
 
         // Create PerpindahanKelas record
@@ -68,6 +72,7 @@ class keluarKampusController extends Controller
             'jurusan_id' => 'required|exists:jurusans,id',
             'mapel_id' => 'required|exists:mapels,id',
             'alasan' => 'required|max:255',
+            'nama_guru' => 'nullable|string|max:255',
         ]);
 
         $pdfFiles = [];
@@ -81,6 +86,7 @@ class keluarKampusController extends Controller
                 'jurusan_id' => $validatedData['jurusan_id'],
                 'mapel_id' => $validatedData['mapel_id'],
                 'alasan' => $validatedData['alasan'],
+                'nama_guru' => $validatedData['nama_guru'] ?? null,
             ];
 
             // Create Izin record
@@ -122,10 +128,10 @@ class keluarKampusController extends Controller
     public function storeSuratTamu(Request $request)
     {
         $validatedData = $request->validate([
-            'identitas' => 'required|string|max:255',
+            // 'identitas' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'jurusan_id' => 'nullable|exists:jurusans,id',
-            'darimana' => 'required|string|max:255',
+            'instansi' => 'required|string|max:255',
             'kemana' => 'required|string|max:255',
             'keperluan' => 'required|string|max:255',
             'captured_photo' => 'required|string', // base64 tetap dikirim
@@ -196,23 +202,9 @@ class keluarKampusController extends Controller
 
     private function getEmailByDestination($destination)
     {
-        $emailMap = [
-            'Kepala Sekolah' => 'mochammadsyamihardiana@gmail.com',
-            'Hubin' => 'hubin@sekolah.com',
-            'Tata Usaha' => 'tu@sekolah.com',
-            'Keuangan' => 'keuangan@sekolah.com',
-            'Kaprog PPLG' => '',
-            'Kaprog MPLB' => '',
-            'Kaprog DKV' => '',
-            'Kaprog TJKT' => '',
-            'Kaprog HR' => '',
-            'Kaprog TMP' => '',
-            'Kaprog TKR' => '',
-            'Kaprog TSM' => ''
-            // Tambahkan email lainnya sesuai kebutuhan
-        ];
+        $user = User::where('name', $destination)->first(); 
 
-        return $emailMap[$destination] ?? null;
+        return $user ? $user->email : null;
     }
 
     public function showPdf($filename)

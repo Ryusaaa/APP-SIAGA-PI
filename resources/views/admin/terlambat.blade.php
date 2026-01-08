@@ -3,7 +3,15 @@
 @section('content')
     <div class="p-3 mx-4 card">
         <form method="GET" action="{{ route('filter.terlambat') }}" class="flex justify-between mb-3">
-            <div>
+            <div class="flex gap-2">
+                <select name="jurusan_id" class="rounded-md">
+                    <option value="">Semua Jurusan</option>
+                    @foreach($jurusans as $jurusan)
+                        <option value="{{ $jurusan->id }}" @if(request('jurusan_id') == $jurusan->id) selected @endif>
+                            {{ $jurusan->nama }}
+                        </option>
+                    @endforeach
+                </select>
                 <select name="interval" class="rounded-md">
                     <option value="day" @if ($interval == 'day') selected @endif>Hari Ini</option>
                     <option value="week" @if ($interval == 'week') selected @endif>Minggu Ini</option>

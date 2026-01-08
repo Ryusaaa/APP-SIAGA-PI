@@ -15,7 +15,7 @@ class GuestsExport implements FromCollection, WithHeadings
         $this->guests = $guests->map(function ($guest) {
             return [
                 'nama' => $guest->nama,
-                'darimana' => $guest->darimana,
+                'instansi' => $guest->instansi,
                 'kemana' => $guest->kemana,
                 'waktu' => $guest->created_at->locale('id')->translatedFormat('d F Y') . ' / ' . $guest->created_at->format('H:i T')
             ];

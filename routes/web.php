@@ -10,11 +10,20 @@ use App\Http\Controllers\keluarKampusController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\SuratTelatController;
+use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
 // Admin
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('users', [UsersController::class, 'index'])->name('users.index');
+    Route::get('users/create', [UsersController::class, 'create'])->name('users.create');
+    Route::post('users', [UsersController::class, 'store'])->name('users.store');
+
+    Route::get('users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
+    Route::patch('users/{id}', [UsersController::class, 'update'])->name('users.update');
+    Route::delete('users/{id}', [UsersController::class, 'destroy'])->name('users.destroy');
 
     Route::controller(SiswaController::class)->group(function () {
         Route::get('siswa', 'index')->name('siswa.index');

@@ -8,6 +8,7 @@ use App\Models\Izin;
 use App\Models\Kelas;
 use App\Models\PerpindahanKelas;
 use App\Models\Siswa;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardUserController extends Controller
@@ -20,7 +21,8 @@ class DashboardUserController extends Controller
         $siswas = Siswa::all();
         $jurusans = Jurusan::where('is_active', true)->get();
         $mapels = Mapel::where('is_active', true)->get();
+        $users = User::all();
 
-        return view('home', compact('izins', 'siswas', 'perpindahanKelas', 'kelas', 'jurusans', 'mapels'));
+        return view('home', compact('izins', 'siswas', 'perpindahanKelas', 'kelas', 'jurusans', 'mapels', 'users'));
     }
 }
