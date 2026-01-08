@@ -502,17 +502,6 @@
                         <input type="text" name="identitas" class="form-control" id="identitas" required
                             placeholder="Nomor identitas">
                     </div> -->
-
-                    <div class="form-group">
-                        <label for="jurusan_id_tamu">Jurusan Tujuan (Opsi)</label>
-                        <select name="jurusan_id" id="jurusan_id_tamu" class="form-control">
-                            <option value="">Pilih Jurusan</option>
-                            @foreach($jurusans as $j)
-                                <option value="{{ $j->id }}">{{ $j->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
                     <div class="form-group">
                         <label for="no_telp">No. Telepon</label>
                         <input type="tel" name="no_telp" class="form-control" id="no_telp" required
@@ -521,7 +510,7 @@
 
                     <div class="form-group">
                         <label for="instansi">instansi</label>
-                        <input type="text" name="instansi" class="form-control" id="instansi" required
+                        <input type="text" name="instansi" class="form-control" id="instansi"
                             placeholder="Asal instansi/tempat">
                     </div>
 

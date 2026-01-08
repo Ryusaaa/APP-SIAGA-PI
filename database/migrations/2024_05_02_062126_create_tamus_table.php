@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('identitas')->nullable();
             $table->string('nama');
-            $table->string('instansi');
+            $table->string('instansi')->nullable();
             $table->string('kemana');
             $table->text('keperluan');
             $table->text('no_telp');

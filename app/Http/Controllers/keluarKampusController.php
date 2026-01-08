@@ -131,7 +131,7 @@ class keluarKampusController extends Controller
             // 'identitas' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'jurusan_id' => 'nullable|exists:jurusans,id',
-            'instansi' => 'required|string|max:255',
+            'instansi' => 'nullable|string|max:255',
             'kemana' => 'required|string|max:255',
             'keperluan' => 'required|string|max:255',
             'captured_photo' => 'required|string', // base64 tetap dikirim
