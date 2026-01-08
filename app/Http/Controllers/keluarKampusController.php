@@ -128,10 +128,10 @@ class keluarKampusController extends Controller
     public function storeSuratTamu(Request $request)
     {
         $validatedData = $request->validate([
-            'identitas' => 'required|string|max:255',
+            // 'identitas' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'jurusan_id' => 'nullable|exists:jurusans,id',
-            'darimana' => 'required|string|max:255',
+            'instansi' => 'required|string|max:255',
             'kemana' => 'required|string|max:255',
             'keperluan' => 'required|string|max:255',
             'captured_photo' => 'required|string', // base64 tetap dikirim

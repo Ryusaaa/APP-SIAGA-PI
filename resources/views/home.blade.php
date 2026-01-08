@@ -492,16 +492,16 @@
                 <form id="formSuratTamu">
                     @csrf
                     <div class="form-group">
-                        <label for="nama">Nama Tamu</label>
+                        <label for="nama">Nama</label>
                         <input type="text" name="nama" class="form-control" id="nama" required
-                            placeholder="Nama lengkap tamu">
+                            placeholder="Nama lengkap">
                     </div>
-
+<!-- 
                     <div class="form-group">
                         <label for="identitas">No. Identitas (KTP/SIM)</label>
                         <input type="text" name="identitas" class="form-control" id="identitas" required
                             placeholder="Nomor identitas">
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                         <label for="jurusan_id_tamu">Jurusan Tujuan (Opsi)</label>
@@ -520,8 +520,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="darimana">Dari Mana</label>
-                        <input type="text" name="darimana" class="form-control" id="darimana" required
+                        <label for="instansi">instansi</label>
+                        <input type="text" name="instansi" class="form-control" id="instansi" required
                             placeholder="Asal instansi/tempat">
                     </div>
 

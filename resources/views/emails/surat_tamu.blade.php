@@ -44,7 +44,7 @@
         <p>Anda menerima sebuah permintaan untuk bertemu dari <strong>{{ $nama }}</strong>.</p>
         <p>Berikut adalah detail permintaan pertemuannya:</p>
         <ul>
-            <li><strong>Dia datang dari:</strong> {{ $darimana }}</li>
+            <li><strong>Dia datang dari:</strong> {{ $instansi }}</li>
             <li><strong>Untuk keperluan:</strong> {{ $keperluan }}</li>
         </ul>
         <p>Mohon untuk segera bertemu jika sedang luang, jika sedang tidak luang, mohon berikan konfirmasi lewat satpam.</p>

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('tamus', function (Blueprint $table) {
             $table->id();
-            $table->string('identitas');
+            $table->string('identitas')->nullable();
             $table->string('nama');
-            $table->string('darimana');
+            $table->string('instansi');
             $table->string('kemana');
             $table->text('keperluan');
             $table->text('no_telp');

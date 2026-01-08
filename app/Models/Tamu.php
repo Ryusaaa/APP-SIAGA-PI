@@ -12,7 +12,7 @@ class Tamu extends Model
         'identitas',
         'nama',
         'jurusan_id',
-        'darimana',
+        'instansi',
         'kemana',
         'keperluan',    
         'no_telp',

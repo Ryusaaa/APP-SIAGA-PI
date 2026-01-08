@@ -92,6 +92,13 @@
                         </a>
                     </x-nav-link>
 
+                    <x-nav-link class="menu-item" :active="request()->routeIs('users.index')">
+                        <a href="{{ route('users.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-user"></i>
+                            <div data-i18n="users">Users</div>
+                        </a>
+                    </x-nav-link>
+
                     <li class="menu-item {{ request()->routeIs('master.*') ? 'active open' : '' }}">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class='menu-icon tf-icons bx bx-data'></i>
