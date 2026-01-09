@@ -109,8 +109,9 @@
 
             <div class="content-info">
                 <div style="width: 50%; float: left;">
+                    <p>Sebagai:{{ $tamu->identitas }}</p>
                     <p>Nama:{{ $tamu->nama }}</p>
-                    <p>Instansi:{{ $tamu->instansi }}</p>
+                    <p>Darimana:{{ $tamu->darimana }}</p>
                     <div class="visitor-photo">
                     <p>Foto:</p>
                         @if($photoData)
