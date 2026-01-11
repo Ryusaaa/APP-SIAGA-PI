@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,142 +8,197 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f2f2f2;
         }
 
         .container {
-            width: 100%;
-            margin: 20px auto;
-            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
             background-color: #fff;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
 
         .header {
-            margin-bottom: 20px;
-            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #000;
+            padding-bottom: 15px;
+        }
+
+        /* FIX DISINI */
+        .header-content {
+            display: table;
+            width: 100%;
         }
 
         .header img {
+            display: table-cell;
             width: 60px;
-            margin-right: 10px;
-            display: inline-block;
-            vertical-align: middle;
+            height: 60px;
+            vertical-align: top;
         }
 
         .header-text {
-            display: inline-block;
+            display: table-cell;
+            padding-left: 15px;
             vertical-align: middle;
+            width: 100%;
             text-align: left;
         }
 
-        .header h1 {
+        .header-text h1 {
             font-size: 16px;
-            margin: 0;
+            margin: 0 0 5px 0;
+            font-weight: bold;
         }
 
-        .header p {
+        .header-text p {
             font-size: 10px;
-            margin: 0;
+            margin: 2px 0;
+            line-height: 1.4;
         }
 
         .content {
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 20px 0;
         }
 
-        .content p {
-            margin-bottom: 5px;
+        .content h2 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 25px;
+            text-decoration: underline;
+        }
+
+        .content-info {
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .content-info > div {
+            box-sizing: border-box;
+        }
+
+        .info-left {
+            width: 50%;
+            float: left;
+            padding-right: 15px;
+        }
+
+        .info-right {
+            width: 50%;
+            float: right;
+            padding-left: 15px;
+        }
+
+        .content-info p {
+            margin: 8px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .content > p {
+            margin: 20px 0;
+            text-align: justify;
+            line-height: 1.8;
+            font-size: 14px;
         }
 
         .signature {
-            text-align: center;
+            margin-top: 35px;
+            overflow: hidden;
         }
 
-        .signature p {
-            margin-top: 20px;
-            display: inline-block;
+        .signature-box {
             width: 45%;
+            text-align: center;
+            font-size: 14px;
         }
 
-        .signature .left-signature {
-            text-align: left;
+        .left-signature {
             float: left;
         }
 
-        .signature .right-signature {
-            text-align: left;
-            /* Menggeser tanda tangan ke kiri */
+        .right-signature {
             float: right;
-            margin-right: 30px;
-            /* Menggeser ke kiri sedikit lagi */
         }
+
+        .signature-space {
+            margin-top: 50px;
+            margin-bottom: 5px;
+        }
+
+        .date-right span {
+            float: right;
+        }
+
 
         .footer {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ccc;
         }
 
         .footer p {
-            font-size: 8px;
-            /* Mengurangi ukuran teks footer */
+            font-size: 10px;
             margin: 0;
+            font-style: italic;
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="header">
-            <img src="pi_blue.png" alt="Logo">
-            <div class="header-text">
-                <h1>Yayasan Pendidikan Teknologi Prakarya Internasional 1952</h1>
-                <p>SMK PRAKARYA INTERNASIONAL [SMK PI]</p>
-                <p>Jalan Inhoftank Nomor 46-146 Pelindung</p>
-                <p>Hewan, Astanaanyar, Bandung 40243, Indonesia</p>
-                <p>Telepon/Faksimile: (022) 520-8637 | website: www.smk-pi.sch.id | e-mail: info@smk-pl.sch.id</p>
+            <div class="header-content">
+                <img src="pi_blue.png" alt="Logo SMK PI">
+                <div class="header-text">
+                    <h1>Yayasan Pendidikan Teknologi Prakarya Internasional 1952</h1>
+                    <p>SMK PRAKARYA INTERNASIONAL [SMK PI]</p>
+                    <p>Jalan Inhoftank Nomor 46-146 Pelindung Hewan, Astanaanyar, Bandung 40243, Indonesia</p>
+                    <p>Telepon/Faksimile: (022) 520-8637 | website: www.smk-pi.sch.id | e-mail: info@smk-pl.sch.id</p>
+                </div>
             </div>
         </div>
 
         <div class="content">
-            <h2>Surat Terlambat </h2>
+            <h2>Surat Terlambat</h2>
 
             <div class="content-info">
-                <div style="width: 50%; float: left;">
-                    <p>Nama:{{ $siswa->siswa->nama }}</p>
-                    <p>Alasan:{{ $siswa->alasan }}</p>
+                <div class="info-left">
+                    <p><strong>Nama:</strong> {{ $siswa->siswa->nama }}</p>
+                    <p><strong>Alasan:</strong> {{ $siswa->alasan }}</p>
                 </div>
-                <div style="width: 50%; float: right;">
-                    <p>Hari & Tanggal: {{ strftime('%A, %d/%m/%Y %H:%M', strtotime($siswa->created_at)) }}</p>
-                    <!-- Memindahkan hari & tanggal ke sini -->
+                <div class="info-right">
+                    <p><strong>Hari & Tanggal:</strong> {{ strftime('%A, %d/%m/%Y %H:%M', strtotime($siswa->created_at)) }}</p>
                 </div>
-                <div style="clear: both;"></div>
+                <div class="clear"></div>
             </div>
 
-            <p>Diizinkan Masuk di jam Pembelajaran ke __ dengan alasan {{ $siswa->alasan }} demikian siswa/i yang
-                bersangkutan dapat masuk kelas atas izin Guru Mata Pelajaran.</p>
+            <p>Diizinkan Masuk di jam Pembelajaran dengan alasan {{ $siswa->alasan }} demikian siswa/i yang bersangkutan dapat masuk kelas atas izin Guru Mata Pelajaran.</p>
 
             <div class="signature">
-                <div class="left-signature">
+                <div class="signature-box left-signature">
                     <p>Penanggung Jawab</p>
-                    <p>(___________)</p>
+                    <p class="signature-space">___________________</p>
                 </div>
-                <div class="right-signature">
+                <div class="signature-box right-signature">
                     <p>Kaprog</p>
-                    <p>(___________)</p>
+                    <p class="signature-space">___________________</p>
                 </div>
-                <div style="clear: both;"></div>
+                <div class="clear"></div>
             </div>
 
-            <p style="text-align: right;  margin-right: 30px;">Bandung, {{ $siswa->created_at->format('d/m/Y') }}</p>
+            <p class="date-right"><span>Bandung, {{ $siswa->created_at->format('d/m/Y') }}</span></p>
         </div>
 
         <div class="footer">
-            <p>**Mohon surat ini dibawa oleh siswa/i yang bersangkutan dan diberikan kepada guru yang bersangkutan saat
-                siswa/i izin keluar kelas.**</p>
+            <p><i>**Mohon surat ini dibawa oleh siswa/i yang bersangkutan dan diberikan kepada guru yang bersangkutan saat siswa/i izin masuk kelas.**</i></p>
         </div>
     </div>
 </body>
-
 </html>
