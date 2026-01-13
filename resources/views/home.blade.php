@@ -194,7 +194,9 @@
         }
     </style>
 </head>
-<body>
+<body class="flex flex-col min-h-screen">
+
+    <main class="flex-1">
 
     <!-- Loading Overlay -->
     <div id="loading" class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] flex items-center justify-center">
@@ -208,7 +210,7 @@
         <div class="text-center">
             <img src="{{ asset('pi_blue.png') }}" alt="Logo" class="logo mx-auto">
             <h1 class="school-name">SMK Prakarya Internasional</h1>
-            <p class="school-subtitle">Sistem Izin Keluar Kampus</p>
+            <p class="school-subtitle">Sistem Informasi Agenda</p>
         </div>
     </div>
 
@@ -398,7 +400,7 @@
                             <input type="tel" name="no_telp" class="form-control" required placeholder="08...">
                         </div>
                         <div>
-                            <label class="form-label">Instansi ()</label>
+                            <label class="form-label">Instansi (opsi)</label>
                             <input type="text" name="instansi" class="form-control" placeholder="Asal instansi">
                         </div>
                     </div>
@@ -697,5 +699,12 @@
             startCamera();
         }
     </script>
+    </main>
+
+    <footer class="py-4">
+        <div class="max-w-7xl mx-auto text-center text-sm text-gray-600">
+            &copy; {{ date('Y') }} pplg smkpi
+        </div>
+    </footer>
 </body>
 </html>
